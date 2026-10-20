@@ -1,0 +1,23 @@
+# Local Demonstration Profile (Bound strictly to loopback to prevent unencrypted network exposure)
+# For remote/production deployments, replace with your domain name (e.g., control.example.com) to enable automatic HTTPS.
+127.0.0.1:81, localhost:81 {
+	# Dedicated fixed upstream for browser-facing Socket.IO traffic
+	handle /socket.io/* {
+		reverse_proxy localhost:3033 {
+			header_up Host {host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Real-IP {remote_host}
+		}
+	}
+
+	# All other application requests go to Next.js
+	handle {
+		reverse_proxy localhost:3000 {
+			header_up Host {host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Real-IP {remote_host}
+		}
+	}
+}

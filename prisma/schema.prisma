@@ -1,0 +1,98 @@
+// INTERLOCK — PS-006 control room persistence layer
+// See docs/05-database-schema.md for the contract.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PolicyFile {
+  id         String   @id @default(cuid())
+  sha        String   @unique
+  yaml       String
+  parsedJson String
+  active     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Run {
+  id                   String    @id
+  batchId              String
+  scenario             String
+  repeat               Int
+  fault                String
+  bProfile             String
+  expect               String
+  status               String
+  startedAt            DateTime
+  endedAt              DateTime?
+  tFaultIso            DateTime?
+  tDetectIso           DateTime?
+  tDecisionIso         DateTime?
+  tSwitchIso           DateTime?
+  detectMs             Float?
+  decideMs             Float?
+  switchMs             Float?
+  outcome              String?
+  reasons              String?
+  downtimeMs           Float?
+  outageOpen           Boolean?
+  failedRequests       Int?
+  servedByNoncompliant Int?
+  auditChainOk         Boolean?
+  auditOrderOk         Boolean?
+  scoreTotal           Float?
+  grade                String?
+  observationJson      String?
+
+  @@index([scenario])
+  @@index([batchId])
+}
+
+model AuditEvent {
+  id       Int      @id @default(autoincrement())
+  runId    String
+  seq      Int
+  ts       DateTime
+  event    String
+  replica  String
+  decision String
+  reason   String
+  policy   String
+  prev     String
+  hash     String
+
+  @@unique([runId, seq])
+  @@index([runId])
+}
+
+model ProbeRecord {
+  id        Int      @id @default(autoincrement())
+  runId     String
+  seq       Int
+  tSend     DateTime
+  ok        Boolean
+  status    Int?
+  latencyMs Float?
+  servedBy  String?
+  epoch     Int?
+  error     String?
+
+  @@index([runId, seq])
+}
+
+model ScoreComponent {
+  id        Int    @id @default(autoincrement())
+  runId     String
+  key       String
+  label     String
+  points    Float
+  maxPoints Float
+  note      String
+
+  @@index([runId])
+}

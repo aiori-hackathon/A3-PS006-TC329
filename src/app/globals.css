@@ -1,0 +1,243 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-overpass), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 1px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-signal-green: var(--signal-green);
+  --color-signal-green-soft: var(--signal-green-soft);
+  --color-signal-red: var(--signal-red);
+  --color-signal-red-soft: var(--signal-red-soft);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+  --color-steel: var(--steel);
+  --color-ink-soft: var(--ink-soft);
+  --color-fascia: var(--fascia);
+  --color-fascia-ink: var(--fascia-ink);
+}
+
+/* ── INTERLOCK signal-box palette ──────────────────────────────────────────
+   Daylight signal-box panel: cool technical paper, ink frames, and color
+   used strictly as information — green = proceed/pass, red = refuse/danger,
+   amber = caution/evaluating, steel = standby. No decorative color. */
+
+:root {
+  --radius: 2px;
+  --background: #edefe9;
+  --foreground: #191c1a;
+  --card: #f6f7f1;
+  --card-foreground: #191c1a;
+  --popover: #fbfcf7;
+  --popover-foreground: #191c1a;
+  --primary: #191c1a;
+  --primary-foreground: #f3f5ee;
+  --secondary: #e3e6da;
+  --secondary-foreground: #191c1a;
+  --muted: #e7eade;
+  --muted-foreground: #56605a;
+  --accent: #dfe3d2;
+  --accent-foreground: #191c1a;
+  --destructive: #b3271e;
+  --border: #b9beaf;
+  --input: #b9beaf;
+  --ring: #191c1a;
+  --chart-1: #0e7b44;
+  --chart-2: #b3271e;
+  --chart-3: #b77803;
+  --chart-4: #56605a;
+  --chart-5: #191c1a;
+  --signal-green: #0e7b44;
+  --signal-green-soft: #d9e8db;
+  --signal-red: #b3271e;
+  --signal-red-soft: #f1dcd7;
+  --caution: #9a6603;
+  --caution-soft: #efe2c2;
+  --steel: #56605a;
+  --ink-soft: #3c443e;
+  --panel-border: #191c1a;
+  --fascia: #191c1a;
+  --fascia-ink: #f3f5ee;
+}
+
+.dark {
+  --background: #10130f;
+  --foreground: #e9ece3;
+  --card: #171b15;
+  --card-foreground: #e9ece3;
+  --popover: #1c211a;
+  --popover-foreground: #e9ece3;
+  --primary: #e9ece3;
+  --primary-foreground: #10130f;
+  --secondary: #232822;
+  --secondary-foreground: #e9ece3;
+  --muted: #232822;
+  --muted-foreground: #9aa397;
+  --accent: #2a3028;
+  --accent-foreground: #e9ece3;
+  --destructive: #e4574a;
+  --border: #39413a;
+  --input: #39413a;
+  --ring: #e9ece3;
+  --chart-1: #4caf7d;
+  --chart-2: #e4574a;
+  --chart-3: #d9a036;
+  --chart-4: #9aa397;
+  --chart-5: #e9ece3;
+  --signal-green: #4caf7d;
+  --signal-green-soft: #1c2e22;
+  --signal-red: #e4574a;
+  --signal-red-soft: #391d18;
+  --caution: #d9a036;
+  --caution-soft: #33290f;
+  --steel: #9aa397;
+  --ink-soft: #c2c8ba;
+  --panel-border: #454d42;
+  --fascia: #0b0d09;
+  --fascia-ink: #e9ece3;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scrollbar-color: var(--steel) var(--background);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "tnum";
+  }
+  ::selection {
+    background: var(--signal-green);
+    color: #fff;
+  }
+  *:focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Framed hardware panel — the core structural device */
+  .panel {
+    background: var(--card);
+    border: 1.5px solid var(--panel-border);
+    border-radius: var(--radius);
+    box-shadow: 2px 2px 0 0 var(--panel-border);
+  }
+  .panel-flat {
+    background: var(--card);
+    border: 1.5px solid var(--panel-border);
+    border-radius: var(--radius);
+  }
+  /* Engraved panel caption — used only where hardware would have one */
+  .plate {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .telemetry {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Signal lamps */
+  .lamp {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--panel-border);
+    flex: none;
+  }
+  .lamp-green {
+    background: var(--signal-green);
+    box-shadow: 0 0 0 2px var(--signal-green-soft);
+  }
+  .lamp-red {
+    background: var(--signal-red);
+    box-shadow: 0 0 0 2px var(--signal-red-soft);
+  }
+  .lamp-amber {
+    background: var(--caution);
+    box-shadow: 0 0 0 2px var(--caution-soft);
+  }
+  .lamp-off {
+    background: var(--muted);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .lamp-pulse {
+      animation: lamp-pulse 1.6s ease-in-out infinite;
+    }
+  }
+  @keyframes lamp-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  /* Route flow on the diagram */
+  .route-flow {
+    stroke-dasharray: 7 5;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .route-flow-active {
+      animation: dash-flow 0.9s linear infinite;
+    }
+  }
+  @keyframes dash-flow {
+    to { stroke-dashoffset: -12; }
+  }
+  /* Thin scrollbars for data tapes */
+  .tape-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--steel) transparent;
+  }
+  .tape-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .tape-scroll::-webkit-scrollbar-thumb {
+    background: var(--steel);
+    border-radius: 0;
+  }
+  .tape-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
