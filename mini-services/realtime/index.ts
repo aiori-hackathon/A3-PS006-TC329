@@ -5,7 +5,7 @@ import {
   ALLOWED_EVENT_TYPES,
   verifyRealtimeToken,
   isValidEvent,
-} from './validator.ts'
+} from './validator'
 
 // Fixed port: read REALTIME_PORT but default to 3033 (never PORT).
 const PORT = Number(process.env.REALTIME_PORT ?? 3033) || 3033
