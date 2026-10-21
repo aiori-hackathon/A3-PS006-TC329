@@ -229,6 +229,9 @@ export class LabEngine {
       reevaluateIntervalMs: this.cfg.reevaluateIntervalMs,
       initialActive: "A",
       onRouteChange: () => this.publishState(),
+      holdAndRetryEnabled: (this.cfg as any).holdAndRetryEnabled,
+      holdTimeoutMs: (this.cfg as any).holdTimeoutMs,
+      retryIntervalMs: (this.cfg as any).retryIntervalMs,
       onGate: (replicaId, obs, decision, replayOk) => {
         this.lastDecisionAt[replicaId] = new Date().toISOString();
         this.gateLog.push({

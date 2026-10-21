@@ -43,6 +43,9 @@ export interface ManagerDeps {
   initialActive: ReplicaId;
   onRouteChange: () => void;
   onGate: (replicaId: ReplicaId, obs: Observation, decision: Decision, replayOk: boolean) => void;
+  holdAndRetryEnabled?: boolean;
+  holdTimeoutMs?: number;
+  retryIntervalMs?: number;
 }
 
 export class FailoverManager {
@@ -186,20 +189,40 @@ export class FailoverManager {
     this.deps.onRouteChange();
 
     const candidate = this.other(replicaId);
-    const decision = await this.gate(candidate);
-    if (decision.passed && this.deps.monitors[candidate].state === "HEALTHY") {
+    let decision = await this.gate(candidate);
+    let candidateHealthy = this.deps.monitors[candidate].state === "HEALTHY";
+
+    if (decision.passed && candidateHealthy) {
       this.route = { mode: "SERVING", active: candidate, epoch: this.route.epoch + 1 };
       audit.emit("failover_done", { replica: candidate, decision: "SWITCHED", policy: decision.policySha });
       this.deps.onRouteChange();
-    } else {
-      const reasons = decision.passed
-        ? "R1_UNREACHABLE" // observed fine but not healthy ⇒ effectively unreachable now
-        : decision.reasons.join("+");
-      audit.emit("failover_refused", { replica: candidate, decision: "REFUSED", reason: reasons });
-      this.route = { mode: "UNAVAILABLE", active: null, epoch: this.route.epoch };
-      audit.emit("service_unavailable", { decision: "DOWN", reason: "NO_COMPLIANT_REPLICA" });
-      this.deps.onRouteChange();
+      return;
     }
+
+    // FR-19: Optional hold_and_retry mode
+    if (this.deps.holdAndRetryEnabled) {
+      const holdDeadline = Date.now() + (this.deps.holdTimeoutMs ?? 2000);
+      const retryInterval = this.deps.retryIntervalMs ?? 200;
+      while (Date.now() < holdDeadline && !this.stopped) {
+        await sleep(retryInterval);
+        decision = await this.gate(candidate);
+        candidateHealthy = this.deps.monitors[candidate].state === "HEALTHY";
+        if (decision.passed && candidateHealthy) {
+          this.route = { mode: "SERVING", active: candidate, epoch: this.route.epoch + 1 };
+          audit.emit("failover_done", { replica: candidate, decision: "SWITCHED", policy: decision.policySha });
+          this.deps.onRouteChange();
+          return;
+        }
+      }
+    }
+
+    const reasons = decision.passed
+      ? "R1_UNREACHABLE" // observed fine but not healthy ⇒ effectively unreachable now
+      : decision.reasons.join("+");
+    audit.emit("failover_refused", { replica: candidate, decision: "REFUSED", reason: reasons });
+    this.route = { mode: "UNAVAILABLE", active: null, epoch: this.route.epoch };
+    audit.emit("service_unavailable", { decision: "DOWN", reason: "NO_COMPLIANT_REPLICA" });
+    this.deps.onRouteChange();
   }
 
   private async onHealthy(replicaId: ReplicaId): Promise<void> {

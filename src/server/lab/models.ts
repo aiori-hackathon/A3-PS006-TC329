@@ -149,6 +149,9 @@ export const ENGINE_CONFIG = {
   observeMs: 12000,
   restoreAtMs: 6000, // S9: replica A restarted this long after the fault
   settleMs: 600,
+  holdAndRetryEnabled: false,
+  holdTimeoutMs: 2000,
+  retryIntervalMs: 200,
 } as const;
 
 export type EngineConfig = typeof ENGINE_CONFIG;

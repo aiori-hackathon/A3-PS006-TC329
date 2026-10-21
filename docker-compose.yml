@@ -1,0 +1,77 @@
+services:
+  # Lab Replica A (Compliant, Location IN, Port 8443)
+  replica-a:
+    build:
+      context: .
+      dockerfile: Dockerfile.replica
+    container_name: interlock-replica-a
+    environment:
+      - REPLICA_ID=A
+      - PORT=8443
+      - REPLICA_PROFILE=compliant
+      - HTTPS_ENABLED=true
+    ports:
+      - "8443:8443"
+    restart: unless-stopped
+    networks:
+      - interlock-net
+
+  # Lab Replica B (Selectable profiles, Port 8444)
+  replica-b:
+    build:
+      context: .
+      dockerfile: Dockerfile.replica
+    container_name: interlock-replica-b
+    environment:
+      - REPLICA_ID=B
+      - PORT=8444
+      - REPLICA_PROFILE=${REPLICA_B_PROFILE:-compliant}
+      - HTTPS_ENABLED=true
+    ports:
+      - "8444:8444"
+    restart: unless-stopped
+    networks:
+      - interlock-net
+
+  # Realtime Socket.IO bridge (Port 3033)
+  realtime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: interlock-realtime
+    command: ["node", "--loader", "tsx", "mini-services/realtime/index.ts"]
+    environment:
+      - REALTIME_PORT=3033
+      - REALTIME_TOKEN=interlock-dev-token
+    ports:
+      - "3033:3033"
+    restart: unless-stopped
+    networks:
+      - interlock-net
+
+  # Controller & Web Control Room (Port 3000)
+  controller:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: interlock-controller
+    depends_on:
+      - replica-a
+      - replica-b
+      - realtime
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - REALTIME_URL=http://realtime:3033/publish
+      - REALTIME_TOKEN=interlock-dev-token
+      - REPLICA_A_URL=https://replica-a:8443
+      - REPLICA_B_URL=https://replica-b:8444
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - interlock-net
+
+networks:
+  interlock-net:
+    driver: bridge

@@ -86,22 +86,98 @@ INTERLOCK is a high-reliability, fail-closed policy enforcement control room des
 
 To maintain rigorous engineering honesty, the boundary between in-memory simulation and real production infrastructure is documented below:
 
-| Feature / Subsystem | Implementation Type | Reality / Simulation Details |
+| Feature / Subsystem | Implementation Type | Reality / Implementation Details |
 |---|---|---|
 | **Web UI & Control Room** | **Real Production** | Full Next.js 16 App Router application, React 19, TailwindCSS, accessible Radix UI primitives. |
 | **API & Mutations** | **Real Production** | HTTP REST endpoints with constant-time API key / Bearer authentication and input sanitization. |
 | **Realtime WebSockets** | **Real Production** | Socket.IO server running on port 3033, broadcasting live health, probes, and audits to browser clients. |
 | **Database Persistence** | **Real Production** | SQLite database (`db/custom.db`) managed via Prisma ORM with transactional writes and foreign keys. |
 | **Cryptographic Verifier** | **Real Production** | SHA-256 HMAC audit chaining, canonical JSON serialization, and independent cryptographic proof verification. |
-| **Replica Workloads** | *In-Process Simulation* | `ReplicaSim` simulates replica nodes (A and B) with synthetic latency, TLS handshakes, certificate attributes, and configurable fault states (crash, linkloss, overload, corrupted certs). |
-| **Network & DNS Routing**| *In-Process Simulation* | `FrontDoor` and `FailoverManager` route traffic in memory between simulated replicas rather than managing real BGP or physical hardware switches. |
+| **Lab CA & PKI Hierarchy** | **Real Production** | Cryptographically valid X.509 v3 certificates with Subject Alternative Names (DNS, IP, SPIFFE URI) signed by Lab Root CA (`pki/`). |
+| **Physical Replica Microservices** | **Real Production** | Standalone Node HTTPS servers (`mini-services/replica/`) exposing `/health`, `/data`, `/meta`, mounting Lab CA certs, and executing live fault injection. |
+| **Container Orchestration** | **Real Production** | Full Docker Compose environment (`docker-compose.yml`) running Replica A, Replica B, Controller, and Realtime bridge. |
+| **Simulation Fast-Path** | *In-Process Option* | In addition to physical replica containers, an in-process `ReplicaSim` mode is available for instantaneous zero-dependency browser demonstrations. |
 
 ---
 
-## Getting Started
+## Quickstart (One-Command Launch)
+
+### On Windows
+```cmd
+start.bat
+```
+*(Automatically verifies dependencies, builds PKI certs, generates Prisma client, starts Realtime Bridge, and launches Next.js on `http://localhost:3000`)*
+
+### On Linux / macOS
+```bash
+./start.sh
+```
+
+### With Docker Compose (Containers + Real HTTPS Endpoints)
+```bash
+docker compose up -d
+```
+
+### With Make
+```bash
+make demo    # Automated scenario and invariant demonstration
+make test    # Run full 58-test suite
+make up      # Start Docker containers
+```
+
+---
+
+## Mentor Reference Pseudocode (FR-54)
+
+A complete one-page algorithmic pseudocode specification for mentors and evaluators is provided at:
+- **[`pseudocode.md`](pseudocode.md)** (Root)
+- **[`docs/pseudocode.md`](docs/pseudocode.md)** (Docs)
+
+It specifies:
+1. `FailoverController` top-level event loop and serialized state transitions
+2. `HealthMonitorLoop` and passive accelerated failure detection
+3. `PolicyGate` deterministic evaluation (Rules R1–R6)
+4. `HandleHealthChange` failover state machine with **Hold-and-Retry** (FR-19) and Fail-Closed (503)
+5. `AuditAppend` canonical tamper-evident hash chaining
+6. `FrontDoorProxy` and `MeasureDowntime` absolute-schedule probe math
+
+---
+
+## Lab PKI Hierarchy (FR-02 & FR-03)
+
+The Lab PKI certificates are stored under [`pki/`](pki/) and generated via `node scripts/generate-pki.mjs`:
+
+| Entity | Role | Subject | Issuer | SANs | Status |
+|---|---|---|---|---|---|
+| `ca/ca.crt` | Root CA | C=IN, O=AIORI PS-006 Lab, CN=Lab Root CA | Self-Signed | cA=TRUE | Trusted Root |
+| `ca/rogue-ca.crt` | Rogue CA | C=XX, O=Rogue Lab, CN=Rogue Untrusted CA | Self-Signed | cA=TRUE | Untrusted (R2 trigger) |
+| `replica-a/tls.crt` | Replica A | C=IN, CN=replica-a.lab.local | Lab Root CA | URI:spiffe://lab/replica/in | Compliant |
+| `replica-b/compliant.crt` | Replica B | C=IN, CN=replica-b.lab.local | Lab Root CA | URI:spiffe://lab/replica/in | Compliant |
+| `replica-b/wrong-location.crt` | Replica B | C=EU, CN=replica-b.lab.local | Lab Root CA | URI:spiffe://lab/replica/eu | Policy Refused (R3) |
+| `replica-b/label-mismatch.crt` | Replica B | C=IN, CN=replica-b.lab.local | Lab Root CA | URI:spiffe://lab/replica/eu | Policy Refused (R4) |
+| `replica-b/untrusted.crt` | Replica B | C=IN, CN=replica-b.lab.local | Rogue CA | URI:spiffe://lab/replica/in | Gate Refused (R2) |
+
+---
+
+## Multi-Runtime Python Verification (NFR-09 & FR-32)
+
+To verify determinism and cryptographic integrity across multiple independent runtimes:
+
+```bash
+# Verify policy R1-R6 evaluation equivalence in Python:
+python scripts/evaluate_policy.py
+
+# Verify SQLite database audit hash chains in Python:
+python scripts/verify_audit.py
+```
+
+---
+
+## Getting Started (Manual Setup)
 
 ### Prerequisites
-- [Bun](https://bun.sh/) (v1.2+) or Node.js (v20+ with npm)
+- Node.js (v20+ with npm) or [Bun](https://bun.sh/) (v1.2+)
+- [Docker](https://www.docker.com/) (optional, for containerized run)
 - [Caddy](https://caddyserver.com/) (optional, for edge reverse-proxying)
 
 ### Installation
@@ -110,11 +186,10 @@ To maintain rigorous engineering honesty, the boundary between in-memory simulat
 git clone https://github.com/7H-ANKUR/A3-PS006-TC329.git
 cd A3-PS006-TC329
 
-# Install dependencies
-bun install
-
-# Generate Prisma client
-bun run db:generate
+# Install dependencies & generate PKI certs
+npm install
+npm run pki
+npm run db:generate
 ```
 
 ### Environment Configuration
