@@ -1,0 +1,22 @@
+# Render Blueprint Specification for INTERLOCK
+services:
+  - type: web
+    name: interlock-control-room
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && node scripts/generate-pki.mjs && npx prisma generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:./custom.db
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: REALTIME_TOKEN
+        generateValue: true
+      - key: REALTIME_PORT
+        value: "3033"

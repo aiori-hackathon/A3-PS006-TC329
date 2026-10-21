@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && node scripts/copy-standalone.mjs",
-    "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
+    "start": "node scripts/start-production.mjs",
     "lint": "eslint .",
     "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test tests/*.test.ts",
     "pki": "node scripts/generate-pki.mjs",
