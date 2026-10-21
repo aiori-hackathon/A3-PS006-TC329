@@ -30,7 +30,9 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/pki ./pki
 COPY --from=builder /app/mini-services ./mini-services
 COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/next.config.ts ./next.config.ts
 
 EXPOSE 3000 3033
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

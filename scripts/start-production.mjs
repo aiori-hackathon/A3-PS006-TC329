@@ -19,7 +19,7 @@ console.log(`[PRODUCTION] Starting INTERLOCK on port ${PORT}...`);
 
 // 1. Start Realtime Bridge on 3033
 console.log(`[PRODUCTION] Spawning Realtime WebSocket Bridge on port 3033...`);
-const realtime = spawn("node", ["--loader", "tsx", "mini-services/realtime/index.ts"], {
+const realtime = spawn("node", ["--experimental-strip-types", "mini-services/realtime/index.ts"], {
   cwd: projectRoot,
   stdio: "inherit",
   env: {
