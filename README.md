@@ -327,6 +327,9 @@ All core architectural specifications and engineering guides are cataloged in [`
 - **Hackathon Submissions & Templates**:
   - [`docs/AIORI3_PS006_Algo-Ancesstors.pdf`](docs/AIORI3_PS006_Algo-Ancesstors.pdf) — Team presentation deck & submission
   - [`docs/Proposed-structure-hackathon.pdf`](docs/Proposed-structure-hackathon.pdf) — Official AIORI hackathon structure template
+- **Operator Manual & Reference Pseudocode**:
+  - [`usermanual.md`](usermanual.md) — Comprehensive operator and evaluator user manual
+  - [`pseudocode.md`](pseudocode.md) — One-page algorithmic pseudocode specification for mentors (FR-54)
 - **Modular Engineering Specifications**:
   - [`docs/01-product-requirements.md`](docs/01-product-requirements.md) through [`docs/12-testing-strategy.md`](docs/12-testing-strategy.md)
 
