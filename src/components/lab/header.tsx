@@ -82,12 +82,14 @@ function OperatorBadge() {
         aria-label={authed ? "Operator authenticated" : "Operator login"}
         onClick={() => (authed ? handleLogout() : setOpen((o) => !o))}
         className={cn(
-          "flex items-center gap-1.5 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider transition-colors",
-          authed ? "text-signal-green" : "text-fascia-ink/55 hover:text-fascia-ink",
+          "flex items-center gap-1.5 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider transition-colors rounded",
+          authed
+            ? "text-signal-green bg-signal-green/10"
+            : "text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 ring-1 ring-amber-400/40",
         )}
       >
         <span aria-hidden>{authed ? "🔒" : "🔓"}</span>
-        <span className="hidden sm:inline">{authed ? "operator" : "login"}</span>
+        <span className="inline text-[11px]">{authed ? "operator" : "login"}</span>
       </button>
 
       {open && !authed && (
@@ -98,6 +100,9 @@ function OperatorBadge() {
           <label className="text-xs font-semibold uppercase tracking-wider text-fascia-ink/70">
             Admin key
           </label>
+          <p className="text-[10px] text-fascia-ink/60 leading-tight">
+            Required to run scenario batches, inject faults, and reset runs.
+          </p>
           <input
             ref={inputRef}
             type="password"

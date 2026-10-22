@@ -33,7 +33,11 @@ export async function req<T>(path: string, init?: RequestInit): Promise<T> {
 
   const data = (await res.json().catch(() => ({}))) as T & { error?: string; message?: string };
   if (!res.ok) {
-    throw new ApiError(data.message ?? data.error ?? `request failed (${res.status})`, res.status, data.error);
+    let msg = data.message ?? data.error ?? `request failed (${res.status})`;
+    if (res.status === 401) {
+      msg = "Operator login required. Tap 🔓 'login' in the top bar to authenticate.";
+    }
+    throw new ApiError(msg, res.status, data.error);
   }
   return data;
 }
