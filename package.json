@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
+    "prebuild": "node scripts/generate-pki.mjs && prisma generate",
     "build": "next build && node scripts/copy-standalone.mjs",
     "start": "node scripts/start-production.mjs",
     "lint": "eslint .",

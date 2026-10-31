@@ -344,6 +344,7 @@ All primary hackathon deliverables and architectural documents are accessible di
 - 📖 **[User Manual (usermanual.md)](usermanual.md)**: Full operator guide, UI component walkthrough, and troubleshooting.
 - 📐 **[Mentor Reference Pseudocode (pseudocode.md)](pseudocode.md)**: Formal one-page algorithmic pseudocode specification (FR-54).
 - ☁️ **[Render Blueprint (render.yaml)](render.yaml)**: One-click cloud deployment specification with automated DB migration.
+- 🔷 **[Azure Deployment Guide (docs/azure-deployment-guide.md)](docs/azure-deployment-guide.md)**: Complete step-by-step Microsoft Azure App Service deployment instructions.
 - 🐳 **[Docker Compose (docker-compose.yml)](docker-compose.yml)**: Complete 4-service containerized deployment topology.
 - 📚 **[Technical Documentation Directory (docs/)](docs/)**:
   - `docs/Architecture.md`: Architectural drivers and trust boundaries.
