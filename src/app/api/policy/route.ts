@@ -1,17 +1,23 @@
-import { db } from "@/lib/db";
+import { db, ensureDbReady } from "@/lib/db";
 import { getEngine } from "@/server/lab/engine";
 import { handleError } from "@/server/lab/api-utils";
 
 /** GET /api/policy — current YAML, parsed summary, hash and load history. */
 export async function GET() {
   try {
+    await ensureDbReady();
     const engine = getEngine();
     const snap = engine.snapshot();
-    const history = await db.policyFile.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 12,
-      select: { sha: true, createdAt: true, active: true },
-    });
+    let history: Array<{ sha: string; createdAt: Date; active: boolean }> = [];
+    try {
+      history = await db.policyFile.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 12,
+        select: { sha: true, createdAt: true, active: true },
+      });
+    } catch (e) {
+      console.warn("[policy] database query failed, returning fallback:", e);
+    }
     return Response.json({
       yaml: engine.currentPolicyYaml(),
       parsed: {

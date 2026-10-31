@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db, ensureDbReady } from "@/lib/db";
 import { summarize } from "@/server/lab/analyze";
 import { handleError } from "@/server/lab/api-utils";
 import { SCENARIOS } from "@/server/lab/runner";
@@ -39,9 +39,15 @@ function runPassedVerification(
 /** GET /api/analytics/matrix — per-scenario aggregates over completed verified runs. */
 export async function GET() {
   try {
-    const allRuns = await db.run.findMany({
-      orderBy: { startedAt: "asc" },
-    });
+    await ensureDbReady();
+    let allRuns: Array<any> = [];
+    try {
+      allRuns = await db.run.findMany({
+        orderBy: { startedAt: "asc" },
+      });
+    } catch (e) {
+      console.warn("[matrix] database query failed, returning fallback:", e);
+    }
 
     const completedRuns = allRuns.filter((r) => r.status === "COMPLETED");
 

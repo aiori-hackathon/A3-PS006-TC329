@@ -16,8 +16,10 @@ fi
 echo "[2/4] Generating Lab CA and Replica PKI Certificates..."
 node scripts/generate-pki.mjs
 
-echo "[3/4] Generating Prisma Client..."
+echo "[3/4] Generating Prisma Client and Database Schema..."
 npx prisma generate
+export DATABASE_URL=${DATABASE_URL:-"file:./dev.db"}
+npx prisma db push --skip-generate --accept-data-loss
 
 echo "[4/4] Starting INTERLOCK Services..."
 echo "- Starting Realtime Bridge on http://127.0.0.1:3033..."

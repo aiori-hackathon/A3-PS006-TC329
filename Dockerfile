@@ -10,9 +10,12 @@ RUN npm install
 
 COPY . .
 
-# Generate PKI certs and Prisma client
+ENV DATABASE_URL="file:./dev.db"
+
+# Generate PKI certs, Prisma client, and SQLite schema
 RUN node scripts/generate-pki.mjs
 RUN npx prisma generate
+RUN npx prisma db push --skip-generate --accept-data-loss
 RUN npm run build
 
 # Runner stage
@@ -21,12 +24,14 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV DATABASE_URL="file:./dev.db"
 
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/dev.db ./dev.db
 COPY --from=builder /app/pki ./pki
 COPY --from=builder /app/mini-services ./mini-services
 COPY --from=builder /app/scripts ./scripts

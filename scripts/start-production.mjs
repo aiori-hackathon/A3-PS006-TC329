@@ -4,7 +4,7 @@
  * application on PORT (defaults to 3000).
  */
 
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,7 +15,24 @@ const projectRoot = path.resolve(__dirname, "..");
 const PORT = process.env.PORT || "3000";
 const HOSTNAME = "0.0.0.0";
 
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "file:./dev.db";
+}
+
 console.log(`[PRODUCTION] Starting INTERLOCK on port ${PORT}...`);
+
+// 0. Synchronize SQLite database schema
+try {
+  console.log(`[PRODUCTION] Synchronizing database schema (${process.env.DATABASE_URL})...`);
+  execSync("npx prisma db push --skip-generate --accept-data-loss", {
+    cwd: projectRoot,
+    stdio: "inherit",
+    env: process.env,
+  });
+  console.log(`[PRODUCTION] Database schema synchronized.`);
+} catch (err) {
+  console.warn("[PRODUCTION] Database schema initialization notice:", err?.message || err);
+}
 
 // 1. Start Realtime Bridge on 3033
 console.log(`[PRODUCTION] Spawning Realtime WebSocket Bridge on port 3033...`);

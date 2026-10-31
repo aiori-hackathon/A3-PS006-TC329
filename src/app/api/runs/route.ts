@@ -1,17 +1,23 @@
-import { db } from "@/lib/db";
+import { db, ensureDbReady } from "@/lib/db";
 import { handleError } from "@/server/lab/api-utils";
 
 /** GET /api/runs?limit=&scenario= — run history (newest first). */
 export async function GET(request: Request) {
   try {
+    await ensureDbReady();
     const url = new URL(request.url);
     const limit = Math.min(200, Math.max(1, Number(url.searchParams.get("limit") ?? 60)));
     const scenario = url.searchParams.get("scenario");
-    const runs = await db.run.findMany({
-      where: scenario ? { scenario } : undefined,
-      orderBy: { startedAt: "desc" },
-      take: limit,
-    });
+    let runs: Array<any> = [];
+    try {
+      runs = await db.run.findMany({
+        where: scenario ? { scenario } : undefined,
+        orderBy: { startedAt: "desc" },
+        take: limit,
+      });
+    } catch (e) {
+      console.warn("[runs] database query failed, returning fallback:", e);
+    }
     return Response.json({
       runs: runs.map((r) => ({
         id: r.id,
