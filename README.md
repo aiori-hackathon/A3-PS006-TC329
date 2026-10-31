@@ -3,12 +3,13 @@
 > **AIORI Hackathon 3 | Problem Statement: PS-006**  
 > **Team: Algo-Ancestors | Team Identifier: `A3-PS006-TC329`**  
 > **🌐 Live Deployment (Azure App Service):** [https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)  
+> **🎥 Demonstration Video:** [https://youtu.be/I4Z1KHafmw8](https://youtu.be/I4Z1KHafmw8)  
 > **Repository:** [https://github.com/aiori-hackathon/A3-PS006-TC329](https://github.com/aiori-hackathon/A3-PS006-TC329)  
-> **🎥 Video Demonstration:** [Watch on YouTube](https://youtu.be/NX4evW86odk)
 
 > [!IMPORTANT]
 > ### 🔑 Evaluator & Operator Access Token
 > - **Live Control Room URL**: [https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)
+> - **Demonstration Video**: [https://youtu.be/I4Z1KHafmw8](https://youtu.be/I4Z1KHafmw8)
 > - **Operator Access Token / Admin Key**: `interlock-admin-secret`
 > - *(Demo Mode is enabled by default for evaluators — if prompted for operator authentication when triggering mutations or running scenarios, enter the Operator Access Token above).*
 
@@ -67,9 +68,10 @@ If yes, traffic is immediately switched. In critical national infrastructure, he
 ## 2. Evaluator Quickstart (One-Command Launch)
 
 ### 🌐 Live Cloud Deployment (Microsoft Azure App Service)
-**[https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)**  
-*Hosted on Azure App Service with automated SQLite schema initialization, live WebSocket telemetry, and interactive Scenario demonstrator.*  
-- **Operator Access Token**: `interlock-admin-secret`
+- **Live URL**: **[https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)**  
+- **🎥 Demonstration Video**: **[https://youtu.be/I4Z1KHafmw8](https://youtu.be/I4Z1KHafmw8)**  
+- **Operator Access Token**: `interlock-admin-secret`  
+*Hosted on Azure App Service with automated SQLite schema initialization, live WebSocket telemetry, and interactive Scenario demonstrator.*
 
 ---
 
