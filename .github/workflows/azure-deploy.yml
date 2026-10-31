@@ -11,7 +11,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: interlock-ps006 # Set this to your Azure Web App name
-  NODE_VERSION: '20.x'
+  NODE_VERSION: '22.x'
 
 jobs:
   build-and-deploy:
