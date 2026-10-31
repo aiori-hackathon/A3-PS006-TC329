@@ -2,6 +2,7 @@
 
 > **AIORI Hackathon 3 | Problem Statement: PS-006**  
 > **Team: Algo-Ancestors | Team Identifier: `A3-PS006-TC329`**  
+> **🌐 Live Deployment (Control Room):** [https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)  
 > **Repository:** [https://github.com/aiori-hackathon/A3-PS006-TC329](https://github.com/aiori-hackathon/A3-PS006-TC329)  
 > **🎥 Video Demonstration:** [Watch on YouTube](https://youtu.be/NX4evW86odk)
 
@@ -59,6 +60,14 @@ If yes, traffic is immediately switched. In critical national infrastructure, he
 
 ## 2. Evaluator Quickstart (One-Command Launch)
 
+### 🌐 Live Cloud Deployment (Instant Zero-Install Access)
+**[https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)**  
+*Hosted on Render with automatic SQLite initialization, live WebSocket streaming, and interactive Scenario demonstrator.*
+
+---
+
+### Local Launch Options
+
 INTERLOCK is completely cross-platform and requires zero external database configuration.
 
 ### Option A: Windows (One-Click Automated Batch Script)
@@ -90,7 +99,7 @@ make pki     # Re-generates Lab Root CA and leaf X.509 certs
 
 ## 3. Live Evaluator 2-Minute Walkthrough
 
-Once launched, open **`http://localhost:3000`** in your browser to experience the industrial signal-box Control Room:
+Once opened at **[https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)** (or `http://localhost:3000` locally), you will experience the industrial signal-box Control Room:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
