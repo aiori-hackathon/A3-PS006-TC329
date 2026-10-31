@@ -2,9 +2,15 @@
 
 > **AIORI Hackathon 3 | Problem Statement: PS-006**  
 > **Team: Algo-Ancestors | Team Identifier: `A3-PS006-TC329`**  
-> **🌐 Live Deployment (Control Room):** [https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)  
+> **🌐 Live Deployment (Azure App Service):** [https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)  
 > **Repository:** [https://github.com/aiori-hackathon/A3-PS006-TC329](https://github.com/aiori-hackathon/A3-PS006-TC329)  
 > **🎥 Video Demonstration:** [Watch on YouTube](https://youtu.be/NX4evW86odk)
+
+> [!IMPORTANT]
+> ### 🔑 Evaluator & Operator Access Token
+> - **Live Control Room URL**: [https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)
+> - **Operator Access Token / Admin Key**: `interlock-admin-secret`
+> - *(Demo Mode is enabled by default for evaluators — if prompted for operator authentication when triggering mutations or running scenarios, enter the Operator Access Token above).*
 
 ---
 
@@ -60,9 +66,10 @@ If yes, traffic is immediately switched. In critical national infrastructure, he
 
 ## 2. Evaluator Quickstart (One-Command Launch)
 
-### 🌐 Live Cloud Deployment (Instant Zero-Install Access)
-**[https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)**  
-*Hosted on Render with automatic SQLite initialization, live WebSocket streaming, and interactive Scenario demonstrator.*
+### 🌐 Live Cloud Deployment (Microsoft Azure App Service)
+**[https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)**  
+*Hosted on Azure App Service with automated SQLite schema initialization, live WebSocket telemetry, and interactive Scenario demonstrator.*  
+- **Operator Access Token**: `interlock-admin-secret`
 
 ---
 
@@ -99,7 +106,7 @@ make pki     # Re-generates Lab Root CA and leaf X.509 certs
 
 ## 3. Live Evaluator 2-Minute Walkthrough
 
-Once opened at **[https://a3-ps006-tc329.onrender.com/](https://a3-ps006-tc329.onrender.com/)** (or `http://localhost:3000` locally), you will experience the industrial signal-box Control Room:
+Once opened at **[https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/](https://interlock-h4abbaewhmddf6f2.centralindia-01.azurewebsites.net/)** (Operator Token: `interlock-admin-secret`) or `http://localhost:3000` locally, you will experience the industrial signal-box Control Room:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
