@@ -348,6 +348,14 @@ export class LabEngine {
     return { audit: this.audit.records, probe: this.runProbeRecords };
   }
 
+  get currentRunId(): string {
+    return this.audit?.runId ?? "";
+  }
+
+  get liveAuditRecords(): readonly AuditRecord[] {
+    return this.audit?.records ?? [];
+  }
+
   async flushAuditPersistence(runId?: string): Promise<void> {
     await this.auditQueue.flush(runId);
   }
