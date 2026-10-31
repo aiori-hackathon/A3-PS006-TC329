@@ -31,12 +31,14 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/dev.db ./dev.db
 COPY --from=builder /app/pki ./pki
 COPY --from=builder /app/mini-services ./mini-services
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/next.config.ts ./next.config.ts
+
+# Ensure SQLite dev.db is accessible from root as well as prisma dir
+RUN cp prisma/dev.db ./dev.db 2>/dev.null || true
 
 EXPOSE 3000 3033
 
